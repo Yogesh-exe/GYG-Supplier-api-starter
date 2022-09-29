@@ -23,11 +23,27 @@ ext {
 	set('springCloudVersion', "2021.0.4")
 }
 
+def generatedDir = "$buildDir/generated"
+
+sourceSets {
+	main {
+		java {
+			srcDir 'src/main/java'
+			srcDir generatedDir + '/src/main/java'
+		}
+	}
+}
+
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+	//JPA Hibernate validations
+	implementation 'org.hibernate.validator:hibernate-validator:7.0.5.Final'
+	implementation 'javax.validation:validation-api:2.0.1.Final'
 	
 	compileOnly 'org.openapitools:openapi-generator-maven-plugin:6.2.0'
 	compileOnly 'org.projectlombok:lombok'
@@ -47,7 +63,6 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-def generatedDir = "$buildDir/generated"
 def openapiServerConfig = [
 		java8                  : "true",
 		library                : "spring-boot",
