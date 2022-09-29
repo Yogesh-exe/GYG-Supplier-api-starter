@@ -1,44 +1,62 @@
 package com.getyourguide.supplier.controller;
 
 import com.getyourguide.connectivity.api.supplierapi.SupplierApi;
+import com.getyourguide.connectivity.supplierapi.openapi.model.Book200ResponseDTO;
 import com.getyourguide.connectivity.supplierapi.openapi.model.BookingCancellationRequestDTO;
 import com.getyourguide.connectivity.supplierapi.openapi.model.BookingRequestDTO;
-import com.getyourguide.connectivity.supplierapi.openapi.model.GetGetAvailabilities200ResponseDTO;
-import com.getyourguide.connectivity.supplierapi.openapi.model.PostBook200ResponseDTO;
-import com.getyourguide.connectivity.supplierapi.openapi.model.PostCancelBooking200ResponseDTO;
-import com.getyourguide.connectivity.supplierapi.openapi.model.PostCancelReservation200ResponseDTO;
-import com.getyourguide.connectivity.supplierapi.openapi.model.PostReserve200ResponseDTO;
+import com.getyourguide.connectivity.supplierapi.openapi.model.CancelBooking200ResponseDTO;
+import com.getyourguide.connectivity.supplierapi.openapi.model.CancelReservation200ResponseDTO;
+import com.getyourguide.connectivity.supplierapi.openapi.model.GetAvailabilities200ResponseDTO;
 import com.getyourguide.connectivity.supplierapi.openapi.model.ReservationCancellationRequestDTO;
 import com.getyourguide.connectivity.supplierapi.openapi.model.ReservationRequestDTO;
+import com.getyourguide.connectivity.supplierapi.openapi.model.Reserve200ResponseDTO;
+import com.getyourguide.supplier.service.AvailabilityService;
+import com.getyourguide.supplier.service.BookingService;
+import com.getyourguide.supplier.service.ReservationService;
+import java.time.OffsetDateTime;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
 
+@RestController
+@RequiredArgsConstructor
 public class SupplierApiController implements SupplierApi {
+
+    private final AvailabilityService availabilityService;
+    private final ReservationService reservationService;
+    private final BookingService bookingService;
+
+
     @Override
-    public ResponseEntity<GetGetAvailabilities200ResponseDTO> getGetAvailabilities(String productId,
-                                                                                   String fromDateTime,
-                                                                                   String toDateTime) {
+    public ResponseEntity<GetAvailabilities200ResponseDTO> getAvailabilities(String productId, OffsetDateTime fromDateTime,
+                                                                             OffsetDateTime toDateTime) {
+        availabilityService.getAvailabilities(productId, fromDateTime, toDateTime);
         return null;
     }
 
     @Override
-    public ResponseEntity<PostBook200ResponseDTO> postBook(BookingRequestDTO bookingRequestDTO) {
+    public ResponseEntity<Reserve200ResponseDTO> reserve(ReservationRequestDTO reservationRequestDTO) {
+        reservationService.reserve(reservationRequestDTO);
         return null;
     }
 
     @Override
-    public ResponseEntity<PostCancelBooking200ResponseDTO> postCancelBooking(
-        BookingCancellationRequestDTO bookingCancellationRequestDTO) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<PostCancelReservation200ResponseDTO> postCancelReservation(
+    public ResponseEntity<CancelReservation200ResponseDTO> cancelReservation(
         ReservationCancellationRequestDTO reservationCancellationRequestDTO) {
+        reservationService.cancelReservation(reservationCancellationRequestDTO);
         return null;
     }
 
     @Override
-    public ResponseEntity<PostReserve200ResponseDTO> postReserve(ReservationRequestDTO reservationRequestDTO) {
+    public ResponseEntity<Book200ResponseDTO> book(BookingRequestDTO bookingRequestDTO) {
+        bookingService.book(bookingRequestDTO);
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<CancelBooking200ResponseDTO> cancelBooking(
+        BookingCancellationRequestDTO bookingCancellationRequestDTO) {
+        bookingService.cancelBooking(bookingCancellationRequestDTO);
         return null;
     }
 }

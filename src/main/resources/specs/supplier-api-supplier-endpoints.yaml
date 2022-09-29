@@ -109,14 +109,14 @@ paths:
                               toTime: '18:00'
                           productId: prod123
                           cutoffSeconds: 0
-                          vacancies: 10 
+                          vacancies: 10
                         - dateTime: '2020-12-02T00:00:00+02:00'
                           openingTimes:
                             - fromTime: '09:00'
                               toTime: '12:00'
                           productId: prod123
                           cutoffSeconds: 0
-                          vacancies: 12 
+                          vacancies: 12
                 No availabilities:
                   value:
                     data:
@@ -138,7 +138,7 @@ paths:
                   value:
                     errorCode: INVALID_PRODUCT
                     errorMessage: Invalid productId
-      operationId: get-get-availabilities
+      operationId: get-availabilities
       description: 'description-availability.md'
       tags: [ supplier ]
       parameters:
@@ -151,6 +151,7 @@ paths:
           example: prod123
         - schema:
             type: string
+            format: date-time
           in: query
           name: fromDateTime
           description: Marks the start (inclusive) of the requested time period (ISO 8601).
@@ -158,6 +159,7 @@ paths:
           example: '2020-12-01T00:00:00+02:00'
         - schema:
             type: string
+            format: date-time
           in: query
           name: toDateTime
           description: 'Marks the end (inclusive) of the requested time period (ISO 8601). '
@@ -166,7 +168,7 @@ paths:
   /1/reserve/:
     post:
       summary: Reservation
-      operationId: post-reserve
+      operationId: reserve
       responses:
         '200':
           description: OK
@@ -250,7 +252,7 @@ paths:
                   value:
                     data: {}
           headers: {}
-      operationId: post-cancel-reservation
+      operationId: cancel-reservation
       description: 'This call represents when either the customer removes the item from their shopping cart, or when it’s automatically removed by default after 1 hour.'
       tags: [ supplier ]
       requestBody:
@@ -299,7 +301,7 @@ paths:
                   $ref: '#/components/examples/ErrorMinParticipantSizeConstraint'
                 Group Size Constraint:
                   $ref: '#/components/examples/ErrorGroupSizeConstraint'
-      operationId: post-book
+      operationId: book
       description: 'description-book.md'
       tags: [ supplier ]
       requestBody:
@@ -381,7 +383,7 @@ paths:
                 Success Response:
                   value:
                     data: {}
-      operationId: post-cancel-booking
+      operationId: cancel-booking
       description: This call must cancel the booking in your system.
       tags: [ supplier ]
       requestBody:
@@ -432,7 +434,7 @@ components:
         vacancies:
           type: integer
           minimum: 0
-          description: For Individual ticket categories, this is the total number of vacancies across all categories for the requested product at the time slot specified in the dateTime field. If the product has “unlimited” availability please use a large value here. E.g. 9999. For GROUP products, this is the total number of available groups, not the total number of individual vacancies. 
+          description: For Individual ticket categories, this is the total number of vacancies across all categories for the requested product at the time slot specified in the dateTime field. If the product has “unlimited” availability please use a large value here. E.g. 9999. For GROUP products, this is the total number of available groups, not the total number of individual vacancies.
         cutoffSeconds:
           type: integer
           minimum: 0
