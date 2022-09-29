@@ -1,0 +1,890 @@
+openapi: 3.0.0
+info:
+  title: Supplier API - Supplier-side Endpoints
+  version: '1.0'
+  description: 'description-supplier-endpoints.md'
+  contact:
+    email: supplier-api@getyourguide.com
+    name: 'Integration Support, GetYourGuide'
+    url: https://integrator.getyourguide.com
+servers:
+  - url: 'https://{host}'
+    variables:
+      host:
+        default: example-host.com
+    description: Supplier Endpoint
+security:
+  - BasicAuth: []
+paths:
+  /1/get-availabilities/:
+    get:
+      summary: Availability Query
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/AvailabilityResponse'
+                  - $ref: '#/components/schemas/ErrorResponseAvailability'
+              examples:
+                Time Point Product - Individual:
+                  value:
+                    data:
+                      availabilities:
+                        - dateTime: '2020-12-01T10:00:00+02:00'
+                          productId: prod123
+                          cutoffSeconds: 3600
+                          vacancies: 10
+                          currency: 'EUR'
+                          pricesByCategory:
+                            retailPrices:
+                              - category: 'ADULT'
+                                price: 1500
+                              - category: 'CHILD'
+                                price: 1000
+                        - dateTime: '2020-12-01T15:00:00+02:00'
+                          productId: prod123
+                          cutoffSeconds: 1800
+                          vacancies: 12
+                          currency: 'EUR'
+                          pricesByCategory:
+                            retailPrices:
+                              - category: 'ADULT'
+                                price: 1600
+                              - category: 'CHILD'
+                                price: 1100
+                Time Period Product - Individual:
+                  value:
+                    data:
+                      availabilities:
+                        - dateTime: '2020-12-01T00:00:00+02:00'
+                          openingTimes:
+                            - fromTime: '09:00'
+                              toTime: '18:00'
+                          productId: prod123
+                          cutoffSeconds: 0
+                          vacancies: 10
+                          currency: 'EUR'
+                          pricesByCategory:
+                            retailPrices:
+                              - category: 'ADULT'
+                                price: 1500
+                              - category: 'CHILD'
+                                price: 1000
+                        - dateTime: '2020-12-02T00:00:00+02:00'
+                          openingTimes:
+                            - fromTime: '09:00'
+                              toTime: '12:00'
+                          productId: prod123
+                          cutoffSeconds: 0
+                          vacancies: 12
+                          currency: 'EUR'
+                          pricesByCategory:
+                            retailPrices:
+                              - category: 'ADULT'
+                                price: 1600
+                              - category: 'CHILD'
+                                price: 1100
+                Time Point Product - Group:
+                  value:
+                    data:
+                      availabilities:
+                        - dateTime: '2020-12-01T10:00:00+02:00'
+                          productId: prod123
+                          cutoffSeconds: 3600
+                          vacancies: 10
+                        - dateTime: '2020-12-01T15:00:00+02:00'
+                          productId: prod123
+                          cutoffSeconds: 1800
+                          vacancies: 12
+                Time Period Product - Group:
+                  value:
+                    data:
+                      availabilities:
+                        - dateTime: '2020-12-01T00:00:00+02:00'
+                          openingTimes:
+                            - fromTime: '09:00'
+                              toTime: '18:00'
+                          productId: prod123
+                          cutoffSeconds: 0
+                          vacancies: 10 
+                        - dateTime: '2020-12-02T00:00:00+02:00'
+                          openingTimes:
+                            - fromTime: '09:00'
+                              toTime: '12:00'
+                          productId: prod123
+                          cutoffSeconds: 0
+                          vacancies: 12 
+                No availabilities:
+                  value:
+                    data:
+                      availabilities: []
+                No availabilities for some dates:
+                  value:
+                    data:
+                      availabilities:
+                        - dateTime: '2020-12-01T10:00:00+02:00'
+                          productId: prod123
+                          vacancies: 0
+                        - dateTime: '2020-12-01T15:00:00+02:00'
+                          productId: prod123
+                          vacancies: 0
+                        - dateTime: '2020-12-01T16:00:00+02:00'
+                          productId: prod123
+                          vacancies: 3
+                Error:
+                  value:
+                    errorCode: INVALID_PRODUCT
+                    errorMessage: Invalid productId
+      operationId: get-get-availabilities
+      description: 'description-availability.md'
+      tags: [ supplier ]
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: productId
+          description: The ID of the requested product in the supplier’s system.
+          required: true
+          example: prod123
+        - schema:
+            type: string
+          in: query
+          name: fromDateTime
+          description: Marks the start (inclusive) of the requested time period (ISO 8601).
+          required: true
+          example: '2020-12-01T00:00:00+02:00'
+        - schema:
+            type: string
+          in: query
+          name: toDateTime
+          description: 'Marks the end (inclusive) of the requested time period (ISO 8601). '
+          required: true
+          example: '2020-12-01T23:59:59+02:00'
+  /1/reserve/:
+    post:
+      summary: Reservation
+      operationId: post-reserve
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ReservationResponse'
+                  - $ref: '#/components/schemas/ErrorResponseReservation'
+                  - $ref: '#/components/schemas/ErrorParticipantSizeConstraint'
+                  - $ref: '#/components/schemas/ErrorGroupSizeConstraint'
+              examples:
+                Success Response:
+                  value:
+                    data:
+                      reservationReference: res789
+                      reservationExpiration: '2020-12-01T07:35:53Z'
+                Minimum Participant Size Constraint:
+                  $ref: '#/components/examples/ErrorMaxParticipantSizeConstraint'
+                Maximum Participant Size Constraint:
+                  $ref: '#/components/examples/ErrorMinParticipantSizeConstraint'
+                Group Size Constraint:
+                  $ref: '#/components/examples/ErrorGroupSizeConstraint'
+      description: 'description-reservation.md'
+      tags: [ supplier ]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReservationRequest'
+            examples:
+              Time Point:
+                value:
+                  data:
+                    bookingItems:
+                      - category: ADULT
+                        count: 2
+                      - category: CHILD
+                        count: 1
+                    dateTime: '2020-12-01T10:00:00+02:00'
+                    productId: prod123
+                    gygBookingReference: GYG189H3K1
+              Time Period:
+                value:
+                  data:
+                    bookingItems:
+                      - category: ADULT
+                        count: 2
+                      - category: CHILD
+                        count: 1
+                    dateTime: '2020-12-01T00:00:00+02:00'
+                    productId: prod123
+                    gygBookingReference: GYG189H3K1
+              Group Category:
+                value:
+                  data:
+                    bookingItems:
+                      - category: GROUP
+                        count: 1
+                        groupSize: 5
+                      - category: GROUP
+                        count: 1
+                        groupSize: 8
+                    dateTime: '2020-12-01T10:00:00+02:00'
+                    productId: prod124
+                    gygBookingReference: GYG189H3K1
+  /1/cancel-reservation/:
+    post:
+      summary: Reservation Cancellation
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/EmptySuccessResponse'
+                  - $ref: '#/components/schemas/ErrorResponseReservationCancellation'
+              examples:
+                Success Response:
+                  value:
+                    data: {}
+          headers: {}
+      operationId: post-cancel-reservation
+      description: 'This call represents when either the customer removes the item from their shopping cart, or when it’s automatically removed by default after 1 hour.'
+      tags: [ supplier ]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReservationCancellationRequest'
+            examples:
+              Success Response:
+                value:
+                  data:
+                    reservationReference: res789
+                    gygBookingReference: GYG189H3K1
+  /1/book/:
+    post:
+      summary: Booking
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/BookingResponse'
+                  - $ref: '#/components/schemas/ErrorResponseBooking'
+                  - $ref: '#/components/schemas/ErrorParticipantSizeConstraint'
+                  - $ref: '#/components/schemas/ErrorGroupSizeConstraint'
+              examples:
+                Success Response:
+                  value:
+                    data:
+                      bookingReference: bk456
+                      tickets:
+                        - category: ADULT
+                          ticketCode: code001
+                          ticketCodeType: QR_CODE
+                        - category: ADULT
+                          ticketCode: code002
+                          ticketCodeType: QR_CODE
+                        - category: CHILD
+                          ticketCode: code003
+                          ticketCodeType: QR_CODE
+                Minimum Participant Size Constraint:
+                  $ref: '#/components/examples/ErrorMaxParticipantSizeConstraint'
+                Maximum Participant Size Constraint:
+                  $ref: '#/components/examples/ErrorMinParticipantSizeConstraint'
+                Group Size Constraint:
+                  $ref: '#/components/examples/ErrorGroupSizeConstraint'
+      operationId: post-book
+      description: 'description-book.md'
+      tags: [ supplier ]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingRequest'
+            examples:
+              With meeting point:
+                value:
+                  data:
+                    bookingItems:
+                      - category: ADULT
+                        count: 2
+                        retailPrice: 1560
+                      - category: CHILD
+                        count: 1
+                        retailPrice: 1300
+                    dateTime: '2020-12-01T10:00:00+02:00'
+                    currency: "USD"
+                    gygBookingReference: GYG1B2D34GHI
+                    productId: prod123
+                    reservationReference: res789
+                    travelers:
+                      - email: john@john-smith.com
+                        firstName: John
+                        lastName: Smith
+                        phoneNumber: +49 030 1231231
+              With pick-up:
+                value:
+                  data:
+                    bookingItems:
+                      - category: ADULT
+                        count: 2
+                      - category: CHILD
+                        count: 1
+                    dateTime: '2020-12-01T10:00:00+02:00'
+                    gygBookingReference: GYG1B2D34GHI
+                    productId: prod123
+                    reservationReference: res789
+                    travelers:
+                      - email: john@john-smith.com
+                        firstName: John
+                        lastName: Smith
+                        phoneNumber: +49 030 1231231
+                    travelerHotel: Hotel Name, Street, City, Country
+                    comment: Please provide accommodation details
+              With traveler weight:
+                value:
+                  data:
+                    bookingItems:
+                      - category: ADULT
+                        count: 3
+                    language: en
+                    dateTime: '2020-12-01T10:00:00+02:00'
+                    gygBookingReference: GYG1B2D34GHI
+                    productId: prod123
+                    reservationReference: res789
+                    travelers:
+                      - email: john@john-smith.com
+                        firstName: John
+                        lastName: Smith
+                        phoneNumber: +49 030 1231231
+                    comment: 'Please provide the weights of everyone in your group.\nTraveler 1:\nWeight: 78 kg\nTraveler 2:\nWeight: 61 kg\nTraveler 3:\nWeight: 70 kg\n'
+
+  /1/cancel-booking/:
+    post:
+      summary: Booking Cancellation
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/EmptySuccessResponse'
+                  - $ref: '#/components/schemas/ErrorResponseBookingCancellation'
+              examples:
+                Success Response:
+                  value:
+                    data: {}
+      operationId: post-cancel-booking
+      description: This call must cancel the booking in your system.
+      tags: [ supplier ]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingCancellationRequest'
+            examples:
+              Success Response:
+                value:
+                  data:
+                    bookingReference: bk456
+                    gygBookingReference: GYG1B2D34GHI
+                    productId: bk456
+components:
+  examples:
+    ErrorMaxParticipantSizeConstraint:
+      value:
+        errorCode: INVALID_PARTICIPANTS_CONFIGURATION
+        errorMessage: The activity requires a minimum of 4 participants
+        participantsConfiguration:
+          - min: 4
+            max: null
+    ErrorMinParticipantSizeConstraint:
+      value:
+        errorCode: INVALID_PARTICIPANTS_CONFIGURATION
+        errorMessage: The activity cannot be reserved for more than 5 participants
+        participantsConfiguration:
+          - min: 1
+            max: 5
+    ErrorGroupSizeConstraint:
+      value:
+        errorCode: INVALID_PARTICIPANTS_CONFIGURATION
+        errorMessage: The activity cannot be reserved for more than 5 participants per group; max 2 groups are allowed
+        participantsConfiguration:
+          - min: 1
+            max: 5
+        groupConfiguration:
+          - max: 2
+  schemas:
+    Availability:
+      type: object
+      properties:
+        dateTime:
+          type: string
+          format: date-time
+          description: The date/time of the activity (ISO 8601). Content of the time part depends on the type (see time point vs time period).
+        vacancies:
+          type: integer
+          minimum: 0
+          description: For Individual ticket categories, this is the total number of vacancies across all categories for the requested product at the time slot specified in the dateTime field. If the product has “unlimited” availability please use a large value here. E.g. 9999. For GROUP products, this is the total number of available groups, not the total number of individual vacancies. 
+        cutoffSeconds:
+          type: integer
+          minimum: 0
+          description: Cut-off time expressed in seconds for the availability of a specific product (the time until which a product can be booked). This field can be 0
+        currency:
+          type: string
+          description: 'Code of the currency (ISO 4217), using alphabetic code and three characters in length. Must be a supported currency. Example: "EUR"'
+        pricesByCategory:
+          type: object
+          description: 'Object representing the prices of the product'
+          properties:
+            retailPrices:
+              type: array
+              description: 'List of retail prices per categories'
+              items:
+                type: object
+                properties:
+                  category:
+                    enum:
+                      - ADULT
+                      - CHILD
+                      - YOUTH
+                      - INFANT
+                      - SENIOR
+                      - STUDENT
+                      - EU_CITIZEN
+                      - MILITARY
+                      - EU_CITIZEN_STUDENT
+                      - GROUP
+                    description: The category for which the retail price is being provided.
+                    type: string
+                  price:
+                    type: integer
+                    description: 'Integer representation of the smallest unit of the currency. Example: 10.00 Euro should be 1000'
+        openingTimes:
+          type: array
+          description: 'A list of opening times (from/to pairs) for time period product only. Should be in the format HH:MM'
+          items:
+            type: object
+            properties:
+              fromTime:
+                type: string
+                description: 'Example: "09:00"'
+              toTime:
+                type: string
+                description: 'Example: "12:00"'
+        productId:
+          type: string
+          description: The ID of the requested product in the supplier’s system that this availability refers to.
+      required:
+        - productId
+        - dateTime
+        - vacancies
+    AvailabilityResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            availabilities:
+              type: array
+              items:
+                $ref: '#/components/schemas/Availability'
+          required:
+            - availabilities
+      required:
+        - data
+    BookingCancellationRequest:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            bookingReference:
+              type: string
+              description: 'An alphanumeric identifier for the booking in the supplier’s system. Maximum length of 25 characters. Example: GYG123JKE453-sf3321C'
+            gygBookingReference:
+              type: string
+              description: The reference of this booking in GetYourGuide’s system.
+            productId:
+              type: string
+              description: The ID of the requested product in the supplier’s system.
+          required:
+            - bookingReference
+            - gygBookingReference
+            - productId
+      required:
+        - data
+    BookingItem:
+      type: object
+      properties:
+        category:
+          $ref: '#/components/schemas/Category'
+        groupSize:
+          type: integer
+          description: 'Indicates the amount of pax per group, only provided in the context of a bookingItem of category type GROUP. The number of persons being reserved for the specified category. When bookingItems[].category is GROUP it must indicate the number of persons in that group.'
+        count:
+          type: integer
+          description: 'The number of persons being reserved for the specified category. When bookingItems[].category is GROUP this will always be 1. If we are reserving multiple groups we will add multiple bookingItems.'
+        retailPrice:
+          type: integer
+          description: 'The basic retail price in the given currency that GetYourGuide charged the customer for one participant of this category during the booking process. This will be sent for all options, regardless of whether Price Over API is enabled.'
+      required:
+        - category
+        - count
+        - retailPrice
+    BookingRequest:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            productId:
+              type: string
+              description: The ID of the requested product in the supplier’s system.
+            reservationReference:
+              type: string
+              description: The identifier for the reservation in the supplier’s system as returned by the reserve call.
+            gygBookingReference:
+              type: string
+              description: The reference of this booking in GetYourGuide’s system.
+            currency:
+              type: string
+              description: The currency of the retail prices in the request.
+            dateTime:
+              type: string
+              format: date-time
+              description: The date/time of the activity to be reserved (ISO 8601). The date/time of the activity (ISO 8601). Content of the time part is depending on the type (see time point vs time period above).
+            bookingItems:
+              type: array
+              items:
+                $ref: '#/components/schemas/BookingItem'
+              description: A list specifying the number of persons per category in this reservation. The data will be the same as in the corresponding field of the reservation call.
+            language:
+              type: string
+              description: ISO 639-1 code of the language in which the product shall be booked.
+            travelers:
+              type: array
+              items:
+                $ref: '#/components/schemas/Traveler'
+              description: 'A list of objects containing information about the travelers of this booking. The number of elements does not necessarily match the total indicated by the bookingItems parameter. As default, only the lead traveler is sent, unless set up differently on the Supplier Admin.'
+            travelerHotel:
+              type: string
+              description: The traveler’s hotel. This is provided to facilitate pickup where applicable.
+            comment:
+              type: string
+              description: |
+                Additional information provided by the traveler, e.g., [pick up](https://supplier-support.getyourguide.com/en/support/solutions/articles/15000030542-setting-meeting-point-and-pickup), dietary restrictions, weight, passport, etc. Please note this parameter could contain several thousand characters of unstructured data (free text).
+
+                Note: this field will be populated only if previously configured by GetYourGuide staff or the supplier.
+          required:
+            - productId
+            - reservationReference
+            - gygBookingReference
+            - currency
+            - dateTime
+            - bookingItems
+            - travelers
+    BookingResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            tickets:
+              type: array
+              items:
+                $ref: '#/components/schemas/Ticket'
+            bookingReference:
+              type: string
+              description: 'An alphanumeric identifier for the booking in the supplier’s system. Maximum length of 25 characters. Example: GYG123JKE453-sf3321C'
+          required:
+            - tickets
+            - bookingReference
+      required:
+        - data
+    Category:
+      enum:
+        - ADULT
+        - CHILD
+        - YOUTH
+        - INFANT
+        - SENIOR
+        - STUDENT
+        - EU_CITIZEN
+        - MILITARY
+        - EU_CITIZEN_STUDENT
+        - GROUP
+      description: The category for which the number of persons is being provided.
+      type: string
+    CategoryCollective:
+      enum:
+        - ADULT
+        - CHILD
+        - YOUTH
+        - INFANT
+        - SENIOR
+        - STUDENT
+        - EU_CITIZEN
+        - MILITARY
+        - EU_CITIZEN_STUDENT
+        - GROUP
+        - COLLECTIVE
+      description: The category of the ticket. The returned categories must match the type and the count of requested items. Alternatively GetYourGuide accepts 1 (and only 1) `COLLECTIVE` ticket.
+      type: string
+    EmptySuccessResponse:
+      properties:
+        data:
+          type: object
+          properties: {}
+      type: object
+    ErrorResponseAvailability:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          enum:
+            - AUTHORIZATION_FAILURE
+            - INVALID_PRODUCT
+            - VALIDATION_FAILURE
+            - INTERNAL_SYSTEM_FAILURE
+        errorMessage:
+          type: string
+      required:
+        - errorCode
+        - errorMessage
+    ErrorResponseReservation:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          enum:
+            - AUTHORIZATION_FAILURE
+            - INVALID_PRODUCT
+            - VALIDATION_FAILURE
+            - INVALID_TICKET_CATEGORY
+            - INTERNAL_SYSTEM_FAILURE
+            - NO_AVAILABILITY
+        errorMessage:
+          type: string
+      required:
+        - errorCode
+        - errorMessage
+    ErrorParticipantSizeConstraint:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          enum:
+            - INVALID_PARTICIPANTS_CONFIGURATION
+        errorMessage:
+          type: string
+        participantsConfiguration:
+          $ref: '#/components/schemas/ParticipantsConfiguration'
+      required:
+        - errorCode
+        - errorMessage
+        - participantsConfiguration
+    ParticipantsConfiguration:
+      type: object
+      properties:
+        min:
+          type: integer
+          minimum: 1
+        max:
+          type: integer
+          nullable: true
+      required:
+        - min
+        - max
+    ErrorGroupSizeConstraint:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          enum:
+            - INVALID_PARTICIPANTS_CONFIGURATION
+        errorMessage:
+          type: string
+        participantsConfiguration:
+          $ref: '#/components/schemas/ParticipantsConfiguration'
+        groupConfiguration:
+          $ref: '#/components/schemas/GroupConfiguration'
+      required:
+        - errorCode
+        - errorMessage
+        - participantsConfiguration
+        - groupConfiguration
+    GroupConfiguration:
+      type: object
+      properties:
+        max:
+          type: integer
+          minimum: 1
+      required:
+        - max
+    ErrorResponseReservationCancellation:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          enum:
+            - AUTHORIZATION_FAILURE
+            - INVALID_RESERVATION
+            - VALIDATION_FAILURE
+            - INTERNAL_SYSTEM_FAILURE
+        errorMessage:
+          type: string
+      required:
+        - errorCode
+        - errorMessage
+    ErrorResponseBooking:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          enum:
+            - AUTHORIZATION_FAILURE
+            - NO_AVAILABILITY
+            - INVALID_RESERVATION
+            - VALIDATION_FAILURE
+            - INVALID_TICKET_CATEGORY
+            - INTERNAL_SYSTEM_FAILURE
+        errorMessage:
+          type: string
+      required:
+        - errorCode
+        - errorMessage
+    ErrorResponseBookingCancellation:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          enum:
+            - AUTHORIZATION_FAILURE
+            - INVALID_BOOKING
+            - VALIDATION_FAILURE
+            - INTERNAL_SYSTEM_FAILURE
+        errorMessage:
+          type: string
+      required:
+        - errorCode
+        - errorMessage
+    ReservationRequest:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            productId:
+              type: string
+              description: The ID of the requested product in the supplier’s system.
+            dateTime:
+              type: string
+              format: date-time
+              description: The date/time of the activity to be reserved (ISO 8601). For the time period products, the time of the activity is always set to `00:00:00` of the requested travel date (see time point vs time period under [General Definitions](/documentation/overview#section/General-Definitions)).
+            bookingItems:
+              type: array
+              items:
+                $ref: '#/components/schemas/BookingItem'
+              description: A list specifying the number of persons per category in this reservation.
+            gygBookingReference:
+              type: string
+              description: The reference of this booking in GetYourGuide’s system.
+          required:
+            - productId
+            - dateTime
+            - bookingItems
+            - gygBookingReference
+      required:
+        - data
+    ReservationCancellationRequest:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            gygBookingReference:
+              type: string
+              description: The reference of this booking in GetYourGuide’s system.
+            reservationReference:
+              type: string
+              description: The identifier for the reservation in the supplier’s system as returned by the reserve call.
+          required:
+            - gygBookingReference
+            - reservationReference
+      required:
+        - data
+    ReservationResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            reservationReference:
+              type: string
+              description: The identifier for the reservation in the supplier’s system as returned by the reserve call.
+            reservationExpiration:
+              type: string
+              description: 'description-reservationExpiration.md'
+              format: date-time
+          required:
+            - reservationReference
+            - reservationExpiration
+      required:
+        - data
+    Ticket:
+      type: object
+      properties:
+        category:
+          $ref: '#/components/schemas/Category'
+        ticketCode:
+          type: string
+          description: The ticket code
+          maxLength: 512
+        ticketCodeType:
+          $ref: '#/components/schemas/TicketCodeType'
+      required:
+        - category
+        - ticketCode
+        - ticketCodeType
+    TicketCodeType:
+      type: string
+      enum:
+        - TEXT
+        - BARCODE_CODE39
+        - BARCODE_CODE128
+        - QR_CODE
+        - DATA_MATRIX
+        - EAN_13
+        - ITF
+        - AZTEC
+      description: Indicates how the ticket code shall be rendered on the customer’s voucher.
+    Traveler:
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: First name of the traveler.
+        lastName:
+          type: string
+          description: Last name of the traveler.
+        email:
+          type: string
+          description: Email address of the traveler
+        phoneNumber:
+          type: string
+          description: Phone number of the traveler
+      required:
+        - email
+        - phoneNumber
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic

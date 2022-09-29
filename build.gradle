@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.7.4'
 	id 'io.spring.dependency-management' version '1.0.14.RELEASE'
 	id 'java'
+	id 'org.openapi.generator' version '6.2.0'
 }
 
 group = 'com.getyourguide'
@@ -27,6 +28,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	
+	compileOnly 'org.openapitools:openapi-generator-maven-plugin:6.2.0'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -43,3 +46,45 @@ dependencyManagement {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+def generatedDir = "$buildDir/generated"
+def openapiServerConfig = [
+		java8                  : "true",
+		library                : "spring-boot",
+		dateLibrary            : "java8",
+		useBeanValidation      : "true",
+		performBeanValidation  : "true",
+		hideGenerationTimestamp: "true",
+		serializableModel      : "true",
+		interfaceOnly          : "true",
+		skipDefaultInterface   : "true",
+		useTags                : "true",
+		openApiNullable        : "false"
+]
+
+task generateGYGSupplierApi(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+
+    inputs.dir("${rootDir}/src/main/resources/specs/")
+    outputs.dir(generatedDir)
+
+    doFirst {
+        delete "${generatedDir}/src/main/java/com/getyourguide/connectivity/api/supplierapi"
+        mkdir generatedDir
+    }
+
+    generatorName = "spring"
+    inputSpec = "${rootDir}/src/main/resources/specs/supplier-api-supplier-endpoints.yaml"
+    outputDir = generatedDir
+    invokerPackage = "com.getyourguide.connectivity.api.supplierapi"
+    apiPackage = "com.getyourguide.connectivity.api.supplierapi"
+    modelPackage = "com.getyourguide.connectivity.supplierapi.openapi.model"
+    modelNameSuffix = "DTO"
+    configOptions = openapiServerConfig
+}
+
+
+task cleanupGeneratedDir(type: Delete) {
+	delete generatedDir
+}
+tasks.generateGYGSupplierApi.dependsOn(tasks.cleanupGeneratedDir)
+tasks.compileJava.dependsOn(tasks.generateGYGSupplierApi)
