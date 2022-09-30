@@ -1,5 +1,6 @@
 package feign.config;
 
+import com.getyourguide.mycompany.exception.MyCompanyBusinessException;
 import com.getyourguide.mycompany.exception.MyCompanyServiceException;
 import com.getyourguide.mycompany.exception.MyCompanyTechnicalException;
 import feign.Response;
@@ -20,6 +21,9 @@ public class MyCompanyDownstreamErrorDecoder implements ErrorDecoder {
 
         if (response.status() == HttpStatus.BAD_REQUEST.value()) {
             return new MyCompanyServiceException(400, errorReason, errorDetails);
+        } else if (response.status() == HttpStatus.NOT_FOUND.value()) {
+            return new MyCompanyBusinessException(404, errorReason, errorDetails);
+
         } else if (response.status() == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
             return new MyCompanyTechnicalException(500, errorReason, errorDetails);
         }
