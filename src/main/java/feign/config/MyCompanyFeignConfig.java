@@ -29,7 +29,8 @@ public class MyCompanyFeignConfig {
 
     @Bean
     public BasicAuthRequestInterceptor basicAuthRequestInterceptor(ServiceProperties serviceProperties) {
-        return new BasicAuthRequestInterceptor(serviceProperties.getMyCompanyCredentials().getUsername(),serviceProperties.getMyCompanyCredentials().getPassword());
+        return new BasicAuthRequestInterceptor(serviceProperties.getMyCompanyCredentials().getUsername(),
+            serviceProperties.getMyCompanyCredentials().getPassword());
     }
 
     @Bean

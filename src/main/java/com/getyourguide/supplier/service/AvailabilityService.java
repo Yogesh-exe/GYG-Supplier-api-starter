@@ -9,10 +9,10 @@ public interface AvailabilityService extends IService {
     default GetAvailabilities200ResponseDTO getAvailabilities(String strProductId, OffsetDateTime fromDateTime,
                                                               OffsetDateTime toDateTime) {
 
-        Product productId = this.getValidProduct(strProductId);
-        return this.getAvailabilities(productId, fromDateTime, toDateTime);
+        Product product = this.getValidProduct(strProductId);
+        return this.getAvailabilities(product, fromDateTime, toDateTime);
     }
 
-    GetAvailabilities200ResponseDTO getAvailabilities(Product productId, OffsetDateTime fromDateTime,
+    GetAvailabilities200ResponseDTO getAvailabilities(Product product, OffsetDateTime fromDateTime,
                                                       OffsetDateTime toDateTime);
 }

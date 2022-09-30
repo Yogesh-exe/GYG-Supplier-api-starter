@@ -20,7 +20,7 @@ public class ReservationServiceImpl extends AbstractService implements Reservati
     }
 
     @Override
-    public Reserve200ResponseDTO reserve(Product productId, ReservationRequestDataDTO data) {
+    public Reserve200ResponseDTO reserve(Product product, ReservationRequestDataDTO data) {
         return null;
     }
 

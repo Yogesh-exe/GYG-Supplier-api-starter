@@ -10,8 +10,8 @@ import com.getyourguide.mycompany.model.Product;
 public interface ReservationService extends IService {
 
     default Reserve200ResponseDTO reserve(ReservationRequestDTO reservationRequestDTO) {
-        Product productId = this.getValidProduct(reservationRequestDTO.getData().getProductId());
-        return this.reserve(productId, reservationRequestDTO.getData());
+        Product product = this.getValidProduct(reservationRequestDTO.getData().getProductId());
+        return this.reserve(product, reservationRequestDTO.getData());
     }
 
     default CancelReservation200ResponseDTO cancelReservation(
@@ -20,7 +20,7 @@ public interface ReservationService extends IService {
             reservationCancellationRequestDTO.getData().getGygBookingReference());
     }
 
-    Reserve200ResponseDTO reserve(Product productId, ReservationRequestDataDTO data);
+    Reserve200ResponseDTO reserve(Product product, ReservationRequestDataDTO data);
 
     CancelReservation200ResponseDTO cancelReservation(String reservationReference, String gygBookingReference);
 }

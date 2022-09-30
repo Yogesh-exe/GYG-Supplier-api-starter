@@ -15,7 +15,7 @@ public class MyCompanyClientService {
 
     private final MyCompanyClient client;
 
-    public Product getProduct(ProductId productId){
+    public Product getProduct(ProductId productId) {
         try {
             return client.getProductDetails(productId.toString());
         } catch (MyCompanyTechnicalException e) {

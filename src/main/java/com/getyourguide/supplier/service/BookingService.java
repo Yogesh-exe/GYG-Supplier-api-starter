@@ -11,19 +11,19 @@ import com.getyourguide.mycompany.model.Product;
 public interface BookingService extends IService {
 
     default Book200ResponseDTO book(BookingRequestDTO bookingRequestDTO) {
-        Product productId = this.getValidProduct(bookingRequestDTO.getData().getProductId());
-        return this.book(productId, bookingRequestDTO.getData());
+        Product product = this.getValidProduct(bookingRequestDTO.getData().getProductId());
+        return this.book(product, bookingRequestDTO.getData());
     }
 
     default CancelBooking200ResponseDTO cancelBooking(
         BookingCancellationRequestDTO bookingCancellationRequestDTO) {
-        Product productId = this.getValidProduct(bookingCancellationRequestDTO.getData().getProductId());
-        return this.cancelBooking(productId, bookingCancellationRequestDTO.getData());
+        Product product = this.getValidProduct(bookingCancellationRequestDTO.getData().getProductId());
+        return this.cancelBooking(product, bookingCancellationRequestDTO.getData());
     }
 
-    Book200ResponseDTO book(Product productId, BookingRequestDataDTO bookingRequestDataDTO);
+    Book200ResponseDTO book(Product product, BookingRequestDataDTO bookingRequestDataDTO);
 
-    CancelBooking200ResponseDTO cancelBooking(Product productId,
+    CancelBooking200ResponseDTO cancelBooking(Product product,
                                               BookingCancellationRequestDataDTO bookingCancellationRequestDataDTO);
 
 }

@@ -13,17 +13,16 @@ public class MyCompanyDownstreamErrorDecoder implements ErrorDecoder {
     @Override
     public Exception decode(String methodKey, Response response) {
         Map<String, Object> errorDetails = new HashMap<>();
-        errorDetails.put("method",methodKey);
-        errorDetails.put("responseDetails",response.body().toString());
+        errorDetails.put("method", methodKey);
+        errorDetails.put("responseDetails", response.body().toString());
 
         String errorReason = response.reason();
 
-        if(response.status() == HttpStatus.BAD_REQUEST.value()){
+        if (response.status() == HttpStatus.BAD_REQUEST.value()) {
             return new MyCompanyServiceException(400, errorReason, errorDetails);
+        } else if (response.status() == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+            return new MyCompanyTechnicalException(500, errorReason, errorDetails);
         }
-        else if (response.status() ==HttpStatus.INTERNAL_SERVER_ERROR.value()){
-            return new MyCompanyTechnicalException(500,errorReason,errorDetails);
-        }
-        return new MyCompanyTechnicalException(503,"Generic Internal failure",Collections.emptyMap());
+        return new MyCompanyTechnicalException(503, "Generic Internal failure", Collections.emptyMap());
     }
 }

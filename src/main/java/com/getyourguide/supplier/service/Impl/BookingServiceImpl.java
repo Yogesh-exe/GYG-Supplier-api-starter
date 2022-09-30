@@ -23,13 +23,13 @@ public class BookingServiceImpl extends AbstractService implements BookingServic
     }
 
     @Override
-    public Book200ResponseDTO book(Product productId, BookingRequestDataDTO bookingRequestDataDTO) {
+    public Book200ResponseDTO book(Product product, BookingRequestDataDTO bookingRequestDataDTO) {
         //TODO: Implement this method
         return new ErrorResponseBookingDTO().errorCode(ErrorResponseBookingDTO.ErrorCodeEnum.INTERNAL_SYSTEM_FAILURE);
     }
 
     @Override
-    public CancelBooking200ResponseDTO cancelBooking(Product productId,
+    public CancelBooking200ResponseDTO cancelBooking(Product product,
                                                      BookingCancellationRequestDataDTO bookingCancellationRequestDataDTO) {
         //TODO: Implement this method
         return new ErrorResponseBookingCancellationDTO().errorCode(

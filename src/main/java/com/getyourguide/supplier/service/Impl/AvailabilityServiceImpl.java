@@ -20,7 +20,7 @@ public class AvailabilityServiceImpl extends AbstractService implements Availabi
     }
 
     @Override
-    public GetAvailabilities200ResponseDTO getAvailabilities(Product productId, OffsetDateTime fromDateTime,
+    public GetAvailabilities200ResponseDTO getAvailabilities(Product product, OffsetDateTime fromDateTime,
                                                              OffsetDateTime toDateTime) {
         //TODO: implement the method
         return new ErrorResponseAvailabilityDTO().errorCode(
