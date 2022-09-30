@@ -1,0 +1,8 @@
+
+
+
+service:
+  properties:
+    security:
+      username: "username"
+      password: "{bcrypt}$2a$10$NHDe6Al6PHpYb3PjOw3x/uKya0ChRFdrb6HWvNFSbkwahjER7B.r6"
