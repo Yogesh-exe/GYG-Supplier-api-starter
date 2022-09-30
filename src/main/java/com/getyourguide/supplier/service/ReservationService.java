@@ -5,12 +5,12 @@ import com.getyourguide.connectivity.supplierapi.openapi.model.ReservationCancel
 import com.getyourguide.connectivity.supplierapi.openapi.model.ReservationRequestDTO;
 import com.getyourguide.connectivity.supplierapi.openapi.model.ReservationRequestDataDTO;
 import com.getyourguide.connectivity.supplierapi.openapi.model.Reserve200ResponseDTO;
-import com.getyourguide.supplier.product.ProductId;
+import com.getyourguide.mycompany.model.Product;
 
 public interface ReservationService extends IService {
 
     default Reserve200ResponseDTO reserve(ReservationRequestDTO reservationRequestDTO) {
-        ProductId productId = this.getValidProduct(reservationRequestDTO.getData().getProductId());
+        Product productId = this.getValidProduct(reservationRequestDTO.getData().getProductId());
         return this.reserve(productId, reservationRequestDTO.getData());
     }
 
@@ -20,7 +20,7 @@ public interface ReservationService extends IService {
             reservationCancellationRequestDTO.getData().getGygBookingReference());
     }
 
-    Reserve200ResponseDTO reserve(ProductId productId, ReservationRequestDataDTO data);
+    Reserve200ResponseDTO reserve(Product productId, ReservationRequestDataDTO data);
 
     CancelReservation200ResponseDTO cancelReservation(String reservationReference, String gygBookingReference);
 }

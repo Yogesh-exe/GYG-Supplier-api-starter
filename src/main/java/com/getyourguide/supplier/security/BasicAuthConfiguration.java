@@ -18,8 +18,8 @@ public class BasicAuthConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            //.csrf().disable()
-            .authorizeRequests().anyRequest().authenticated()
+            .csrf().disable()
+            .authorizeRequests().antMatchers("/1").authenticated()
             .and()
             .httpBasic();
 
@@ -32,8 +32,8 @@ public class BasicAuthConfiguration {
         // Please use more secured storage for the credentials
 
         UserDetails user = User
-            .withUsername(serviceProperties.getSecurity().getUsername())
-            .password(serviceProperties.getSecurity().getPassword())
+            .withUsername(serviceProperties.getGetYourGuideCredentials().getUsername())
+            .password(serviceProperties.getGetYourGuideCredentials().getPassword())
             .roles("USER")
             .build();
         return new InMemoryUserDetailsManager(user);

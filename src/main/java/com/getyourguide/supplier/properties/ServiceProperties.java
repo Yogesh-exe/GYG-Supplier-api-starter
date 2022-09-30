@@ -16,7 +16,12 @@ public class ServiceProperties {
     /**
      * GetYourGuide's security details
      */
-    private SecurityProperties security;
+    private SecurityProperties getYourGuideCredentials;
+
+    /**
+     * My Company's security details
+     */
+    private SecurityProperties myCompanyCredentials;
 
 
     // Classes needed for the properties
@@ -24,12 +29,12 @@ public class ServiceProperties {
     @Setter
     public static class SecurityProperties {
         /**
-         * GetYourGuide Username
+         * Username
          */
         private String username;
 
         /**
-         * GetYourGuide password
+         * Password
          */
         private String password;
     }

@@ -1,6 +1,12 @@
 service:
   properties:
-    security:
+    getYourGuideCredentials:
       username: "username"
       password: "{bcrypt}$2a$10$NHDe6Al6PHpYb3PjOw3x/uKya0ChRFdrb6HWvNFSbkwahjER7B.r6"
 # NOTE: Password can be encrypted with Spring Boot CLI https://docs.spring.io/spring-security/reference/features/authentication/password-storage.html#authentication-password-storage-boot-cli
+    myCompanyCredentials:
+      username: "mock-user"
+      password: "mock-password"
+    mycompany:
+      client:
+        url: "url"
