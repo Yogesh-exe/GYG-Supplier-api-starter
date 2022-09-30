@@ -14,6 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class BasicAuthConfiguration {
     private final ServiceProperties serviceProperties;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -30,7 +31,6 @@ public class BasicAuthConfiguration {
         //TODO: This is for demonstration purpose only.
         // Please use more secured storage for the credentials
 
-        //NOTE: Password can be encrypted with Spring Boot CLI https://docs.spring.io/spring-security/reference/features/authentication/password-storage.html#authentication-password-storage-boot-cli
         UserDetails user = User
             .withUsername(serviceProperties.getSecurity().getUsername())
             .password(serviceProperties.getSecurity().getPassword())

@@ -19,9 +19,9 @@ public abstract class AbstractService implements IService {
         var productId = this.productIdDeserializer.deserialize(strProductId).orElseThrow(
             () -> new InvalidProductException(OperationId.DEFAULT,
                 String.format("The given productId [%s] is not parse-able.", strProductId))
-        );;
+        );
         boolean isValidProduct = productIdValidator.validateProductId(productId);
-        if (!isValidProduct){
+        if (!isValidProduct) {
             throw new InvalidProductException(OperationId.DEFAULT, "ProductId provided is invalid.");
         }
         return productId;

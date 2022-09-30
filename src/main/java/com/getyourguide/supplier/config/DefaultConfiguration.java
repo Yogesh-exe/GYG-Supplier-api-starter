@@ -11,12 +11,12 @@ import org.springframework.context.annotation.Configuration;
 public class DefaultConfiguration {
 
     @Bean
-    ProductIdValidator getProductIdValidator(){
-        return p->true;
+    ProductIdValidator getProductIdValidator() {
+        return p -> true;
     }
 
     @Bean
-    ProductIdDeserializer getProductIdDeserializer(){
-        return s-> Optional.of(new ProductId());
+    ProductIdDeserializer getProductIdDeserializer() {
+        return s -> Optional.of(new ProductId());
     }
 }

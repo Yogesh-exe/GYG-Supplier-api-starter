@@ -18,12 +18,6 @@ public enum OperationId {
         this.value = value;
     }
 
-    @Override
-    @JsonValue
-    public String toString() {
-        return String.valueOf(value);
-    }
-
     @JsonCreator
     public static OperationId fromValue(String value) {
         for (OperationId b : OperationId.values()) {
@@ -32,5 +26,11 @@ public enum OperationId {
             }
         }
         throw new IllegalArgumentException("Unexpected value '" + value + "'");
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+        return String.valueOf(value);
     }
 }

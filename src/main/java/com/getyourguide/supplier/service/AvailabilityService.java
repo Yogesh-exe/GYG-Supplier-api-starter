@@ -5,9 +5,9 @@ import com.getyourguide.supplier.product.ProductId;
 import java.time.OffsetDateTime;
 
 
-public interface AvailabilityService extends IService{
-    default  GetAvailabilities200ResponseDTO getAvailabilities(String strProductId, OffsetDateTime fromDateTime,
-                                                      OffsetDateTime toDateTime) {
+public interface AvailabilityService extends IService {
+    default GetAvailabilities200ResponseDTO getAvailabilities(String strProductId, OffsetDateTime fromDateTime,
+                                                              OffsetDateTime toDateTime) {
 
         ProductId productId = this.getValidProduct(strProductId);
         return this.getAvailabilities(productId, fromDateTime, toDateTime);

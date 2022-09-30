@@ -6,7 +6,6 @@ import com.getyourguide.connectivity.supplierapi.openapi.model.BookingRequestDat
 import com.getyourguide.connectivity.supplierapi.openapi.model.CancelBooking200ResponseDTO;
 import com.getyourguide.connectivity.supplierapi.openapi.model.ErrorResponseBookingCancellationDTO;
 import com.getyourguide.connectivity.supplierapi.openapi.model.ErrorResponseBookingDTO;
-import com.getyourguide.supplier.exception.ValidationFailureException;
 import com.getyourguide.supplier.product.ProductId;
 import com.getyourguide.supplier.product.ProductIdDeserializer;
 import com.getyourguide.supplier.product.ProductIdValidator;
@@ -31,7 +30,8 @@ public class BookingServiceImpl extends AbstractService implements BookingServic
     public CancelBooking200ResponseDTO cancelBooking(ProductId productId,
                                                      BookingCancellationRequestDataDTO bookingCancellationRequestDataDTO) {
         //TODO: Implement this method
-        return new ErrorResponseBookingCancellationDTO().errorCode(ErrorResponseBookingCancellationDTO.ErrorCodeEnum.INTERNAL_SYSTEM_FAILURE);
+        return new ErrorResponseBookingCancellationDTO().errorCode(
+            ErrorResponseBookingCancellationDTO.ErrorCodeEnum.INTERNAL_SYSTEM_FAILURE);
     }
 
 }

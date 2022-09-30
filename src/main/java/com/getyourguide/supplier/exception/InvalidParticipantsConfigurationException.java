@@ -7,9 +7,9 @@ import com.getyourguide.connectivity.supplierapi.openapi.model.ParticipantsConfi
 public class InvalidParticipantsConfigurationException extends ServiceException {
     private static final long serialVersionUID = 1L;
 
-    private ParticipantsConfigurationDTO participantsConfiguration;
+    private final ParticipantsConfigurationDTO participantsConfiguration;
 
-    private GroupConfigurationDTO groupConfiguration;
+    private final GroupConfigurationDTO groupConfiguration;
 
     public InvalidParticipantsConfigurationException(
         OperationId operationId,
@@ -17,7 +17,7 @@ public class InvalidParticipantsConfigurationException extends ServiceException 
         ParticipantsConfigurationDTO participantsConfiguration,
         GroupConfigurationDTO groupConfiguration
     ) {
-            super(operationId, ErrorCode.INVALID_PARTICIPANTS_CONFIGURATION, message);
+        super(operationId, ErrorCode.INVALID_PARTICIPANTS_CONFIGURATION, message);
         if (participantsConfiguration.getMin() == null) {
             participantsConfiguration.setMin(1);
         }

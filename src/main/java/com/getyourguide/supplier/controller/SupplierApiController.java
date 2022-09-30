@@ -28,7 +28,8 @@ public class SupplierApiController implements SupplierApi {
 
 
     @Override
-    public ResponseEntity<GetAvailabilities200ResponseDTO> getAvailabilities(String productId, OffsetDateTime fromDateTime,
+    public ResponseEntity<GetAvailabilities200ResponseDTO> getAvailabilities(String productId,
+                                                                             OffsetDateTime fromDateTime,
                                                                              OffsetDateTime toDateTime) {
         availabilityService.getAvailabilities(productId, fromDateTime, toDateTime);
         return null;

@@ -14,7 +14,7 @@ servers:
         default: example-host.com
     description: Supplier Endpoint
 security:
-  - BasicAuth: []
+  - BasicAuth: [ ]
 paths:
   /1/get-availabilities/:
     get:
@@ -120,7 +120,7 @@ paths:
                 No availabilities:
                   value:
                     data:
-                      availabilities: []
+                      availabilities: [ ]
                 No availabilities for some dates:
                   value:
                     data:
@@ -250,8 +250,8 @@ paths:
               examples:
                 Success Response:
                   value:
-                    data: {}
-          headers: {}
+                    data: { }
+          headers: { }
       operationId: cancel-reservation
       description: 'This call represents when either the customer removes the item from their shopping cart, or when it’s automatically removed by default after 1 hour.'
       tags: [ supplier ]
@@ -382,7 +382,7 @@ paths:
               examples:
                 Success Response:
                   value:
-                    data: {}
+                    data: { }
       operationId: cancel-booking
       description: This call must cancel the booking in your system.
       tags: [ supplier ]
@@ -644,7 +644,7 @@ components:
       properties:
         data:
           type: object
-          properties: {}
+          properties: { }
       type: object
     ErrorResponseAvailability:
       type: object

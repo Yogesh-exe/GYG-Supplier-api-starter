@@ -5,7 +5,7 @@ import com.getyourguide.connectivity.supplierapi.openapi.model.CategoryDTO;
 public class InvalidTicketCategoryException extends ServiceException {
     private static final long serialVersionUID = 1L;
 
-    private CategoryDTO ticketCategory;
+    private final CategoryDTO ticketCategory;
 
     public InvalidTicketCategoryException(OperationId operationId, String message, CategoryDTO category) {
         super(operationId, ErrorCode.INVALID_TICKET_CATEGORY, message);

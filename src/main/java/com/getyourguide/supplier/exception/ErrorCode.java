@@ -25,16 +25,10 @@ public enum ErrorCode {
 
     TRIGGER_RETRY_EXCEPTION("TRIGGER_RETRY_EXCEPTION");
 
-    private String value;
+    private final String value;
 
     ErrorCode(String value) {
         this.value = value;
-    }
-
-    @Override
-    @JsonValue
-    public String toString() {
-        return String.valueOf(value);
     }
 
     @JsonCreator
@@ -45,5 +39,11 @@ public enum ErrorCode {
             }
         }
         throw new IllegalArgumentException("Unexpected value '" + value + "'");
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+        return String.valueOf(value);
     }
 }

@@ -21,6 +21,7 @@ public class AvailabilityServiceImpl extends AbstractService implements Availabi
     public GetAvailabilities200ResponseDTO getAvailabilities(ProductId productId, OffsetDateTime fromDateTime,
                                                              OffsetDateTime toDateTime) {
         //TODO: implement the method
-        return new ErrorResponseAvailabilityDTO().errorCode(ErrorResponseAvailabilityDTO.ErrorCodeEnum.INTERNAL_SYSTEM_FAILURE);
+        return new ErrorResponseAvailabilityDTO().errorCode(
+            ErrorResponseAvailabilityDTO.ErrorCodeEnum.INTERNAL_SYSTEM_FAILURE);
     }
 }
