@@ -4,12 +4,15 @@ import com.getyourguide.mycompany.exception.MyCompanyBusinessException;
 import com.getyourguide.mycompany.exception.MyCompanyException;
 import com.getyourguide.mycompany.exception.MyCompanyServiceException;
 import com.getyourguide.mycompany.exception.MyCompanyTechnicalException;
+import com.getyourguide.supplier.exception.ErrorCode;
+import com.getyourguide.supplier.exception.OperationId;
+import com.getyourguide.supplier.exception.ServiceException;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MyCompanyExceptionToGYGExceptionWrapper {
     //TODO: Yogesh to provide error wrappings.
-    public RuntimeException getWrappedException(MyCompanyException myCompanyException) {
+    public ServiceException getWrappedException(MyCompanyException myCompanyException) {
 
         if (myCompanyException instanceof MyCompanyBusinessException) {
             return this.wrapBusinessException(myCompanyException);
@@ -18,20 +21,20 @@ public class MyCompanyExceptionToGYGExceptionWrapper {
         } else if (myCompanyException instanceof MyCompanyTechnicalException) {
             return this.wrapTechnicalException(myCompanyException);
         } else {
-            return new RuntimeException("Something went wrong");
+            return new ServiceException(OperationId.DEFAULT, ErrorCode.INTERNAL_SYSTEM_FAILURE, "Something went wrong");
         }
 
     }
 
-    private RuntimeException wrapTechnicalException(MyCompanyException myCompanyException) {
+    private ServiceException wrapTechnicalException(MyCompanyException myCompanyException) {
         return null;
     }
 
-    private RuntimeException wrapServiceException(MyCompanyException myCompanyException) {
+    private ServiceException wrapServiceException(MyCompanyException myCompanyException) {
         return null;
     }
 
-    private RuntimeException wrapBusinessException(MyCompanyException myCompanyException) {
+    private ServiceException wrapBusinessException(MyCompanyException myCompanyException) {
         return null;
     }
 }

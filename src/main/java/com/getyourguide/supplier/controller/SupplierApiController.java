@@ -31,33 +31,28 @@ public class SupplierApiController implements SupplierApi {
     public ResponseEntity<GetAvailabilities200ResponseDTO> getAvailabilities(String productId,
                                                                              OffsetDateTime fromDateTime,
                                                                              OffsetDateTime toDateTime) {
-        availabilityService.getAvailabilities(productId, fromDateTime, toDateTime);
-        return null;
+        return ResponseEntity.ok(availabilityService.getAvailabilities(productId, fromDateTime, toDateTime));
     }
 
     @Override
     public ResponseEntity<Reserve200ResponseDTO> reserve(ReservationRequestDTO reservationRequestDTO) {
-        reservationService.reserve(reservationRequestDTO);
-        return null;
+        return ResponseEntity.ok(reservationService.reserve(reservationRequestDTO));
     }
 
     @Override
     public ResponseEntity<CancelReservation200ResponseDTO> cancelReservation(
         ReservationCancellationRequestDTO reservationCancellationRequestDTO) {
-        reservationService.cancelReservation(reservationCancellationRequestDTO);
-        return null;
+        return ResponseEntity.ok(reservationService.cancelReservation(reservationCancellationRequestDTO));
     }
 
     @Override
     public ResponseEntity<Book200ResponseDTO> book(BookingRequestDTO bookingRequestDTO) {
-        bookingService.book(bookingRequestDTO);
-        return null;
+        return ResponseEntity.ok(bookingService.book(bookingRequestDTO));
     }
 
     @Override
     public ResponseEntity<CancelBooking200ResponseDTO> cancelBooking(
         BookingCancellationRequestDTO bookingCancellationRequestDTO) {
-        bookingService.cancelBooking(bookingCancellationRequestDTO);
-        return null;
+        return ResponseEntity.ok(bookingService.cancelBooking(bookingCancellationRequestDTO));
     }
 }
