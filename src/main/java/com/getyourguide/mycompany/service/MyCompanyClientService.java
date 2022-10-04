@@ -4,6 +4,8 @@ import com.getyourguide.mycompany.client.MyCompanyClient;
 import com.getyourguide.mycompany.exception.MyCompanyException;
 import com.getyourguide.mycompany.exception.wrapper.MyCompanyExceptionToGYGExceptionWrapper;
 import com.getyourguide.mycompany.model.Product;
+import com.getyourguide.supplier.exception.InvalidProductException;
+import com.getyourguide.supplier.exception.OperationId;
 import com.getyourguide.supplier.product.ProductId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,9 +20,10 @@ public class MyCompanyClientService {
 
     public Product getProduct(ProductId productId) {
         try {
-            return client.getProductDetails(productId.toString());
+            //TODO: Correct the productId being passed
+            return client.getProductDetails("productId.toString()");
         } catch (MyCompanyException myCompanyException) {
-            throw gygExceptionWrapper.getWrappedException(myCompanyException);
+            throw new InvalidProductException(OperationId.DEFAULT,myCompanyException.getErrorMessage());
         }
     }
 

@@ -19,11 +19,17 @@ public class MyCompanyDownstreamErrorDecoder implements ErrorDecoder {
 
         String errorReason = response.reason();
 
+        //TODO: based on the response that mycompany api returns
+        // please return one of the following Exception
+        // Following is an example
         if (response.status() == HttpStatus.BAD_REQUEST.value()) {
-            return new MyCompanyServiceException(400, errorReason, errorDetails);
-        } else if (response.status() == HttpStatus.NOT_FOUND.value()) {
-            return new MyCompanyBusinessException(404, errorReason, errorDetails);
-
+            return new MyCompanyBusinessException(400, errorReason, errorDetails);
+        }
+        else if(response.status() == HttpStatus.REQUEST_TIMEOUT.value()){
+            return new MyCompanyServiceException(408, errorReason, errorDetails);
+        }
+        else if (response.status() == HttpStatus.NOT_FOUND.value()) {
+            return new MyCompanyTechnicalException(404, errorReason, errorDetails);
         } else if (response.status() == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
             return new MyCompanyTechnicalException(500, errorReason, errorDetails);
         }

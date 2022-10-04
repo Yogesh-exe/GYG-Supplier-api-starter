@@ -7,34 +7,44 @@ import com.getyourguide.mycompany.exception.MyCompanyTechnicalException;
 import com.getyourguide.supplier.exception.ErrorCode;
 import com.getyourguide.supplier.exception.OperationId;
 import com.getyourguide.supplier.exception.ServiceException;
+import com.getyourguide.supplier.exception.ValidationFailureException;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MyCompanyExceptionToGYGExceptionWrapper {
-    //TODO: Yogesh to provide error wrappings.
-    public ServiceException getWrappedException(MyCompanyException myCompanyException) {
+
+    //TODO: Based on the MyCompanyException return the appropriate GYG Service Exception.
+    // With the help of this exception proper Error entity is returned in ErrorHandler
+    public ServiceException getWrappedException(MyCompanyException myCompanyException,
+                                                OperationId operationId) {
 
         if (myCompanyException instanceof MyCompanyBusinessException) {
-            return this.wrapBusinessException(myCompanyException);
+            return this.wrapBusinessException(myCompanyException,operationId);
         } else if (myCompanyException instanceof MyCompanyServiceException) {
-            return this.wrapServiceException(myCompanyException);
+            return this.wrapServiceException(myCompanyException,operationId);
         } else if (myCompanyException instanceof MyCompanyTechnicalException) {
-            return this.wrapTechnicalException(myCompanyException);
+            return this.wrapTechnicalException(myCompanyException,operationId);
         } else {
             return new ServiceException(OperationId.DEFAULT, ErrorCode.INTERNAL_SYSTEM_FAILURE, "Something went wrong");
         }
 
     }
-
-    private ServiceException wrapTechnicalException(MyCompanyException myCompanyException) {
+    // Example
+    private ServiceException wrapTechnicalException(MyCompanyException myCompanyException,
+                                                    OperationId operationId) {
+        if(myCompanyException.getErrorCode() == 404){
+            return new ValidationFailureException(operationId, myCompanyException.getErrorMessage());
+        }
         return null;
     }
 
-    private ServiceException wrapServiceException(MyCompanyException myCompanyException) {
+    private ServiceException wrapServiceException(MyCompanyException myCompanyException,
+                                                  OperationId operationId) {
         return null;
     }
 
-    private ServiceException wrapBusinessException(MyCompanyException myCompanyException) {
+    private ServiceException wrapBusinessException(MyCompanyException myCompanyException,
+                                                   OperationId operationId) {
         return null;
     }
 }
