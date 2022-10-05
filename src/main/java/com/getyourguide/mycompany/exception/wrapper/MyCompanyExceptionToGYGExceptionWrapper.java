@@ -1,5 +1,6 @@
 package com.getyourguide.mycompany.exception.wrapper;
 
+import com.getyourguide.mycompany.constants.ErrorCodeConstant;
 import com.getyourguide.mycompany.exception.MyCompanyBusinessException;
 import com.getyourguide.mycompany.exception.MyCompanyException;
 import com.getyourguide.mycompany.exception.MyCompanyServiceException;
@@ -32,9 +33,6 @@ public class MyCompanyExceptionToGYGExceptionWrapper {
     // Example
     private ServiceException wrapTechnicalException(MyCompanyException myCompanyException,
                                                     OperationId operationId) {
-        if(myCompanyException.getErrorCode() == 404){
-            return new ValidationFailureException(operationId, myCompanyException.getErrorMessage());
-        }
         return null;
     }
 
@@ -45,6 +43,10 @@ public class MyCompanyExceptionToGYGExceptionWrapper {
 
     private ServiceException wrapBusinessException(MyCompanyException myCompanyException,
                                                    OperationId operationId) {
+        if(myCompanyException.getErrorCode() == ErrorCodeConstant.PRODUCT_NOT_FOUND_ERROR_CODE
+            || myCompanyException.getErrorCode() == ErrorCodeConstant.PRODUCT_NO_LONGER_ACTIVE_ERROR_CODE){
+            return new ValidationFailureException(operationId, myCompanyException.getErrorMessage());
+        }
         return null;
     }
 }

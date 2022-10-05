@@ -1,5 +1,7 @@
 package feign.config;
 
+import com.getyourguide.mycompany.client.error.ClientErrorMapper;
+import com.getyourguide.mycompany.client.error.ClientErrorResponse;
 import com.getyourguide.mycompany.exception.MyCompanyBusinessException;
 import com.getyourguide.mycompany.exception.MyCompanyServiceException;
 import com.getyourguide.mycompany.exception.MyCompanyTechnicalException;
@@ -23,7 +25,8 @@ public class MyCompanyDownstreamErrorDecoder implements ErrorDecoder {
         // please return one of the following Exception
         // Following is an example
         if (response.status() == HttpStatus.BAD_REQUEST.value()) {
-            return new MyCompanyBusinessException(400, errorReason, errorDetails);
+            ClientErrorResponse clientErrorResponse = ClientErrorMapper.getClientError(response);
+            return new MyCompanyBusinessException(clientErrorResponse.getStatus(), clientErrorResponse.getMessage(), errorDetails);
         }
         else if(response.status() == HttpStatus.REQUEST_TIMEOUT.value()){
             return new MyCompanyServiceException(408, errorReason, errorDetails);
