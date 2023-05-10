@@ -4,7 +4,7 @@ import java.util.Map;
 import lombok.Getter;
 
 @Getter
-public class MyCompanyException extends Exception {
+public class MyCompanyException extends RuntimeException {
     private final Integer errorCode;
     private final String errorMessage;
     private final Map<String, Object> errorDetails;

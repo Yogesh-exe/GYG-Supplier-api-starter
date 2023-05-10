@@ -10,3 +10,7 @@ service:
     mycompany:
       client:
         url: "localhost:8081/mock/1"
+
+logging:
+  level:
+    feign: DEBUG
