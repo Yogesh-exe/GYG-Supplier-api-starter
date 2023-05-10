@@ -1,0 +1,553 @@
+openapi: 3.0.3
+info:
+  title: MyCompany - OpenAPI 3.0
+  description: |-
+    This is a sample of mycompany API specs used for the booking systems
+    Some useful links:
+    - [GYG Integrator Portal](https://integrator.getyourguide.com/home)
+    - [The source code](https://github.com/Yogesh-exe/GYG-Supplier-api-starter)
+  termsOfService: https://integrator.getyourguide.com/terms_and_conditions
+  contact:
+    email: contact@mycompany.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+servers:
+  - url: https://api.mycompany.com/api/v3
+tags:
+  - name: products
+    description: Everything about your Products
+  - name: bookings
+    description: Everything about your Booking
+paths:
+  /products/{productId}:
+    get:
+      tags:
+        - products
+      summary: Find product by ID
+      description: Returns a single product
+      operationId: getproductById
+      parameters:
+        - name: productId
+          in: path
+          description: ID of product to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - api_key: [ ]
+        - productstore_auth:
+            - write:products
+            - read:products
+  /products/{productId}/availability:
+    get:
+      tags:
+        - products
+      summary: get Availability for the product
+      description: Returns availability of product based on dates provided
+      operationId: getProductAvailability
+      parameters:
+        - name: productId
+          in: path
+          description: ID of product to return
+          required: true
+          schema:
+            type: string
+        - name: startDateTime
+          in: query
+          description: start date time
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: endtDateTime
+          in: query
+          description: end date time
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Availability'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Availability'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - api_key: [ ]
+        - productstore_auth:
+            - write:products
+            - read:products
+  /bookings:
+    post:
+      tags:
+        - bookings
+      summary: Create a new Booking
+      description: Create a new Booking
+      operationId: createBooking
+      requestBody:
+        description: Create a new booking in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Booking'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Booking'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Booking'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/BookingResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - productstore_auth:
+            - write:products
+            - read:products
+  /bookings/{bookingId}:
+    get:
+      tags:
+        - bookings
+      summary: Find Booking by ID
+      description: Returns a single Booking
+      operationId: getBookingById
+      parameters:
+        - name: bookingId
+          in: path
+          description: ID of product to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/BookingResponse'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: booking not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - api_key: [ ]
+        - productstore_auth:
+            - write:products
+            - read:products
+    delete:
+      tags:
+        - bookings
+      summary: Delete an existing booking
+      description: Delete an existing booking by Id
+      operationId: deleteBooking
+      parameters:
+        - name: bookingId
+          in: path
+          description: ID of product to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: booking not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '405':
+          description: Validation exception
+      security:
+        - productstore_auth:
+            - write:products
+            - read:products
+  /bookings/{bookingId}/cancel:
+    post:
+      tags:
+        - bookings
+      summary: Cancel the booking product by ID
+      description: Returns a single product
+      operationId: cancel the Booking
+      parameters:
+        - name: bookingId
+          in: path
+          description: ID of booking to cancel
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/BookingResponse'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: booking not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - api_key: [ ]
+        - productstore_auth:
+            - write:products
+            - read:products
+  /bookings/{bookingId}/confirm:
+    post:
+      tags:
+        - bookings
+      summary: Confirm the booking by ID
+      description: Confirm the booking by ID
+      operationId: confirmBooking
+      parameters:
+        - name: bookingId
+          in: path
+          description: ID of booking to confirm
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/BookingResponse'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: booking not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - api_key: [ ]
+        - productstore_auth:
+            - write:products
+            - read:products
+components:
+  schemas:
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: walking_tour
+      xml:
+        name: category
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        username:
+          type: string
+          example: theUser
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: James
+        email:
+          type: string
+          example: john@email.com
+        phone:
+          type: string
+          example: '12345'
+        type:
+          type: string
+          description: Category of user
+          example: ADULT
+      xml:
+        name: user
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+      xml:
+        name: tag
+    Price:
+      type: object
+      properties:
+        price:
+          type: integer
+          format: int64
+          example: 100
+        currency:
+          type: string
+          example: USD
+      xml:
+        name: category
+    Product:
+      required:
+        - id
+        - name
+        - description
+        - photoUrls
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: Wada
+        description:
+          type: string
+          example: Bai tumhi Wadyawar ya
+        price:
+          $ref: '#/components/schemas/Price'
+        category:
+          $ref: '#/components/schemas/Category'
+        photoUrls:
+          type: array
+          xml:
+            wrapped: true
+          items:
+            type: string
+            xml:
+              name: photoUrl
+        tags:
+          type: array
+          xml:
+            wrapped: true
+          items:
+            $ref: '#/components/schemas/Tag'
+        status:
+          type: string
+          description: product status in the store
+          enum:
+            - available
+            - discontinued
+            - temp_hold
+      xml:
+        name: product
+    Availability:
+      required:
+        - productId
+        - startDateTime
+        - endDateTime
+        - available
+      type: object
+      properties:
+        productId:
+          type: string
+          example: 10XYZSS
+        startDateTime:
+          type: string
+          format: date-time
+          example: 2023-10-22T02:00:00
+        endDateTime:
+          type: string
+          format: date-time
+          example: 2023-10-22T02:00:00
+        available:
+          type: integer
+          format: int64
+          example: 10
+      xml:
+        name: Availability
+    Booking:
+      required:
+        - bookingId
+        - productId
+        - startDateTime
+        - channelId
+        - quantity
+        - traveller
+      type: object
+      properties:
+        bookingId:
+          type: string
+          example: 3RF12SSD
+        productId:
+          type: string
+          example: 10
+        startDateTime:
+          type: string
+          format: date-time
+          example: 2023-10-22T02:00:00
+        channelId:
+          type: string
+          example: GYG
+        quantity:
+          type: integer
+          format: int64
+          example: 10
+        traveller:
+          $ref: '#/components/schemas/User'
+      xml:
+        name: Availability
+    BookingResponse:
+      required:
+        - ticket
+        - bookingReference
+      type:
+        object
+      properties:
+        booking:
+          $ref: '#/components/schemas/Booking'
+        ticket:
+          $ref: '#/components/schemas/Ticket'
+        validUntil:
+          type: string
+          format: date-time
+          example: 2023-10-22T02:00:00
+    Ticket:
+      description: Successful Ticket response
+      type: object
+      properties:
+        ticketNo:
+          type: string
+          description: The identifier for ticket.
+        ticketType:
+          type: string
+          description: Type of ticket
+          enum:
+            - BARCODE
+            - AZTEC
+            - PDF
+      required:
+        - ticketNo
+        - ticketType
+    ErrorResponse:
+      required:
+        - errorCode
+        - errorMessage
+      type: object
+      properties:
+        errorCode:
+          type: string
+        erroMessage:
+          type: string
+  requestBodies:
+    product:
+      description: product object
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Product'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Product'
+  securitySchemes:
+    productstore_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://productstore3.swagger.io/oauth/authorize
+          scopes:
+            write:products: modify products in your account
+            read:products: read your products
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header

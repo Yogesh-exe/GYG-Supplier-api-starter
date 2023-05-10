@@ -36,7 +36,7 @@ public class SupplierApiController implements SupplierApi {
 
     @Override
     public ResponseEntity<Reserve200ResponseDTO> reserve(ReservationRequestDTO reservationRequestDTO) {
-        return ResponseEntity.ok(reservationService.reserve(reservationRequestDTO));
+        return ResponseEntity.ok(reservationService.createReservation(reservationRequestDTO));
     }
 
     @Override

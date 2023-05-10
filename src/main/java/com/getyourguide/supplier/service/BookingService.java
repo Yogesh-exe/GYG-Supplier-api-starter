@@ -6,24 +6,24 @@ import com.getyourguide.connectivity.supplierapi.openapi.model.BookingCancellati
 import com.getyourguide.connectivity.supplierapi.openapi.model.BookingRequestDTO;
 import com.getyourguide.connectivity.supplierapi.openapi.model.BookingRequestDataDTO;
 import com.getyourguide.connectivity.supplierapi.openapi.model.CancelBooking200ResponseDTO;
-import com.getyourguide.mycompany.model.Product;
+import com.mycompany.openapi.model.ProductDTO;
 
-public interface BookingService extends IService {
+public interface BookingService extends GYGService {
 
     default Book200ResponseDTO book(BookingRequestDTO bookingRequestDTO) {
-        Product product = this.getValidProduct(bookingRequestDTO.getData().getProductId());
+        ProductDTO product = this.getValidProduct(bookingRequestDTO.getData().getProductId());
         return this.book(product, bookingRequestDTO.getData());
     }
 
     default CancelBooking200ResponseDTO cancelBooking(
         BookingCancellationRequestDTO bookingCancellationRequestDTO) {
-        Product product = this.getValidProduct(bookingCancellationRequestDTO.getData().getProductId());
+        ProductDTO product = this.getValidProduct(bookingCancellationRequestDTO.getData().getProductId());
         return this.cancelBooking(product, bookingCancellationRequestDTO.getData());
     }
 
-    Book200ResponseDTO book(Product product, BookingRequestDataDTO bookingRequestDataDTO);
+    Book200ResponseDTO book(ProductDTO product, BookingRequestDataDTO bookingRequestDataDTO);
 
-    CancelBooking200ResponseDTO cancelBooking(Product product,
+    CancelBooking200ResponseDTO cancelBooking(ProductDTO product,
                                               BookingCancellationRequestDataDTO bookingCancellationRequestDataDTO);
 
 }

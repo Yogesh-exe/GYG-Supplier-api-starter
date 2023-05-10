@@ -2,7 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.7.4'
 	id 'io.spring.dependency-management' version '1.0.14.RELEASE'
 	id 'java'
-	id 'org.openapi.generator' version '6.2.0'
+	id 'org.openapi.generator' version '6.2.1'
 }
 
 group = 'com.getyourguide'
@@ -45,8 +45,8 @@ dependencies {
 	//validations
 	implementation 'org.hibernate.validator:hibernate-validator:7.0.5.Final'
 	implementation 'javax.validation:validation-api:2.0.1.Final'
-	
-	compileOnly 'org.openapitools:openapi-generator-maven-plugin:6.2.0'
+
+	compileOnly 'org.openapitools:openapi-generator-maven-plugin:6.2.1'
 	compileOnly 'org.projectlombok:lombok'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -68,7 +68,7 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-def openapiServerConfig = [
+def openapiConfig = [
 		java8                  : "true",
 		library                : "spring-boot",
 		dateLibrary            : "java8",
@@ -80,6 +80,20 @@ def openapiServerConfig = [
 		skipDefaultInterface   : "true",
 		useTags                : "true",
 		openApiNullable        : "false"
+]
+
+def openapiClientConfig = [
+		library                : "spring-cloud",
+		useBeanValidation      : "true",
+		performBeanValidation  : "true",
+		hideGenerationTimestamp: "true",
+		serializableModel      : "true",
+		interfaceOnly          : "true",
+		skipDefaultInterface   : "false",
+		useTags                : "true",
+		openApiNullable        : "false",
+		useFeignClientUrl      :"true",
+		additionalOneOfTypeAnnotations: "@lombok.NoArgsConstructor @JsonDeserialize"
 ]
 
 task generateGYGSupplierApi(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
@@ -99,7 +113,28 @@ task generateGYGSupplierApi(type: org.openapitools.generator.gradle.plugin.tasks
     apiPackage = "com.getyourguide.connectivity.api.supplierapi"
     modelPackage = "com.getyourguide.connectivity.supplierapi.openapi.model"
     modelNameSuffix = "DTO"
-    configOptions = openapiServerConfig
+    configOptions = openapiClientConfig
+}
+
+task generateMyCompanyApi(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+
+	inputs.dir("${rootDir}/src/main/resources/specs/")
+	outputs.dir(generatedDir)
+
+	doFirst {
+		delete "${generatedDir}/src/main/java/com/mycompany/api"
+		mkdir generatedDir
+	}
+
+	generatorName = "spring"
+	inputSpec = "${rootDir}/src/main/resources/specs/mycompany-api.yaml"
+	outputDir = generatedDir
+	invokerPackage = "com.mycompany.api"
+	apiPackage = "com.mycompany.api"
+	modelPackage = "com.mycompany.openapi.model"
+	modelNameSuffix = "DTO"
+	configOptions = openapiClientConfig
 }
 
 tasks.compileJava.dependsOn(tasks.generateGYGSupplierApi)
+tasks.compileJava.dependsOn(tasks.generateMyCompanyApi)

@@ -1,11 +1,12 @@
 package com.getyourguide.mycompany.service;
 
-import com.getyourguide.mycompany.client.MyCompanyClient;
-import com.getyourguide.mycompany.exception.MyCompanyException;
+import com.getyourguide.mycompany.client.MyCompanyBookingClient;
+import com.getyourguide.mycompany.client.MyCompanyProductClient;
 import com.getyourguide.mycompany.exception.wrapper.MyCompanyExceptionToGYGExceptionWrapper;
-import com.getyourguide.mycompany.model.Product;
+
 import com.getyourguide.supplier.exception.OperationId;
-import com.getyourguide.supplier.product.ProductId;
+import com.mycompany.openapi.model.BookingResponseDTO;
+import com.mycompany.openapi.model.ProductDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,19 +14,28 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MyCompanyClientService {
 
-    private final MyCompanyClient client;
+    private final MyCompanyBookingClient bookingClient;
+    private final MyCompanyProductClient productClient;
 
     private final MyCompanyExceptionToGYGExceptionWrapper gygExceptionWrapper;
 
     //TODO: Implement the methods which calls the client endpoint in the mycompany system.
     // Example of a getProduct detail endpoint based on the supplier productId
-    public Product getProduct(ProductId productId) {
+    public ProductDTO getProduct(String productId) {
         try {
             //TODO: Correct the productId being passed
-            return client.getProductDetails("productId.toString()");
-        } catch (MyCompanyException myCompanyException) {
+            return productClient.getproductById(productId).getBody();
+        } catch (Exception myCompanyException) {
             throw gygExceptionWrapper.getWrappedException(myCompanyException,OperationId.DEFAULT);
         }
     }
 
+    public BookingResponseDTO getBooking(String reservationReference, String gygBookingReference) {
+        try {
+            //TODO: Correct the productId being passed
+            return bookingClient.getBookingById(reservationReference).getBody();
+        } catch (Exception myCompanyException) {
+            throw gygExceptionWrapper.getWrappedException(myCompanyException,OperationId.DEFAULT);
+        }
+    }
 }

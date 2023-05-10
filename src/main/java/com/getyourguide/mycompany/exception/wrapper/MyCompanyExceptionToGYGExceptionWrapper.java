@@ -16,7 +16,7 @@ public class MyCompanyExceptionToGYGExceptionWrapper {
 
     //TODO: Based on the MyCompanyException return the appropriate GYG Service Exception.
     // With the help of this exception proper Error entity is returned in ErrorHandler
-    public ServiceException getWrappedException(MyCompanyException myCompanyException,
+    public ServiceException getWrappedException(Exception myCompanyException,
                                                 OperationId operationId) {
 
         if (myCompanyException instanceof MyCompanyBusinessException) {
@@ -31,18 +31,19 @@ public class MyCompanyExceptionToGYGExceptionWrapper {
 
     }
     // Example
-    private ServiceException wrapTechnicalException(MyCompanyException myCompanyException,
+    private ServiceException wrapTechnicalException(Exception myCompanyException,
                                                     OperationId operationId) {
         return null;
     }
 
-    private ServiceException wrapServiceException(MyCompanyException myCompanyException,
+    private ServiceException wrapServiceException(Exception myCompanyException,
                                                   OperationId operationId) {
         return null;
     }
 
-    private ServiceException wrapBusinessException(MyCompanyException myCompanyException,
+    private ServiceException wrapBusinessException(Exception exception,
                                                    OperationId operationId) {
+        MyCompanyException myCompanyException = (MyCompanyException) exception;
         if(myCompanyException.getErrorCode() == ErrorCodeConstant.PRODUCT_NOT_FOUND_ERROR_CODE
             || myCompanyException.getErrorCode() == ErrorCodeConstant.PRODUCT_NO_LONGER_ACTIVE_ERROR_CODE){
             return new ValidationFailureException(operationId, myCompanyException.getErrorMessage());

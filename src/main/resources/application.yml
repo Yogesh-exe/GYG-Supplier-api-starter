@@ -9,4 +9,4 @@ service:
       password: "mock-password"
     mycompany:
       client:
-        url: "url"
+        url: "localhost:8081/mock/1"

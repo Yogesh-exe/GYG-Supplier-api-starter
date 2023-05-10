@@ -2,5 +2,5 @@ package com.getyourguide.supplier.product;
 
 public interface ProductIdValidator {
 
-    boolean validateProductId(ProductId productId);
+    boolean validateProductId(String productId);
 }
