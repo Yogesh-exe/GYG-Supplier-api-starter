@@ -12,12 +12,11 @@ public class InvalidParticipantsConfigurationException extends ServiceException 
     private final GroupConfigurationDTO groupConfiguration;
 
     public InvalidParticipantsConfigurationException(
-        OperationId operationId,
         String message,
         ParticipantsConfigurationDTO participantsConfiguration,
         GroupConfigurationDTO groupConfiguration
     ) {
-        super(operationId, ErrorCode.INVALID_PARTICIPANTS_CONFIGURATION, message);
+        super(ErrorCode.INVALID_PARTICIPANTS_CONFIGURATION, message);
         if (participantsConfiguration.getMin() == null) {
             participantsConfiguration.setMin(1);
         }
@@ -26,11 +25,10 @@ public class InvalidParticipantsConfigurationException extends ServiceException 
     }
 
     public InvalidParticipantsConfigurationException(
-        OperationId operationId,
         String message,
         ParticipantsConfigurationDTO participantsConfiguration
     ) {
-        this(operationId, message, participantsConfiguration, null);
+        this(message, participantsConfiguration, null);
     }
 
     public ParticipantsConfigurationDTO getParticipantsConfiguration() {

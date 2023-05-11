@@ -487,12 +487,17 @@ components:
         - ticketType
     ErrorResponse:
       required:
+        - httpStatusCode
         - errorCode
         - errorMessage
       type: object
       properties:
+        httpStatusCode:
+          type: integer
+          format: int32
         errorCode:
-          type: string
+          type: integer
+          format: int32
         erroMessage:
           type: string
   requestBodies:

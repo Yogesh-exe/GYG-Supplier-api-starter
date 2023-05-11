@@ -30,7 +30,7 @@ public class ReservationServiceImpl extends AbstractService implements Reservati
 
     @Override
     public BookingResponseDTO getReservation(String reservationReference, String gygBookingReference) {
-        return myCompanyClientService.getBooking(reservationReference, gygBookingReference);
+        return myCompanyClientService.getBooking(reservationReference);
     }
 
     @Override

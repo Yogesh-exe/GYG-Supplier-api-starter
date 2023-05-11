@@ -2,7 +2,6 @@ package com.getyourguide.supplier.service.Impl;
 
 import com.getyourguide.mycompany.service.MyCompanyClientService;
 import com.getyourguide.supplier.exception.InvalidProductException;
-import com.getyourguide.supplier.exception.OperationId;
 import com.getyourguide.supplier.product.ProductIdValidator;
 import com.getyourguide.supplier.service.GYGService;
 import com.mycompany.openapi.model.ProductDTO;
@@ -19,7 +18,7 @@ public abstract class AbstractService implements GYGService {
 
         boolean isValidProduct = productIdValidator.validateProductId(productId);
         if (!isValidProduct) {
-            throw new InvalidProductException(OperationId.DEFAULT, "ProductId provided is invalid.");
+            throw new InvalidProductException("ProductId provided is invalid.");
         }
 
         return myCompanyClientService.getProduct(productId);

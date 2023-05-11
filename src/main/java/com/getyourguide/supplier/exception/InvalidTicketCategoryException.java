@@ -7,8 +7,8 @@ public class InvalidTicketCategoryException extends ServiceException {
 
     private final CategoryDTO ticketCategory;
 
-    public InvalidTicketCategoryException(OperationId operationId, String message, CategoryDTO category) {
-        super(operationId, ErrorCode.INVALID_TICKET_CATEGORY, message);
+    public InvalidTicketCategoryException(String message, CategoryDTO category) {
+        super(ErrorCode.INVALID_TICKET_CATEGORY, message);
         this.ticketCategory = category;
     }
 

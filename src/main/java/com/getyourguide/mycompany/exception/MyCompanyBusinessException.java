@@ -1,10 +1,11 @@
 package com.getyourguide.mycompany.exception;
 
-import java.util.Map;
+import org.springframework.http.HttpStatus;
 
 public class MyCompanyBusinessException extends MyCompanyException {
-    public MyCompanyBusinessException(Integer errorCode, String errorMessage,
-                                      Map<String, Object> errorDetails) {
-        super(errorCode, errorMessage, errorDetails);
+
+    public MyCompanyBusinessException(HttpStatus httpStatusCode, Integer errorCode,
+                                      String errorMessage) {
+        super(httpStatusCode, errorCode, errorMessage);
     }
 }
