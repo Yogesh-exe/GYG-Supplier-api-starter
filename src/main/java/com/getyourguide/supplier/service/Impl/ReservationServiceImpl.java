@@ -37,6 +37,8 @@ public class ReservationServiceImpl extends AbstractService implements Reservati
     public Reserve200ResponseDTO createReservation(ProductDTO product, ReservationRequestDataDTO data) {
         log.info("Calling reservation for Product: {}, With GYG request: {}.", product.getId(), data);
         //TODO: Implement this method
+        BookingDTO bookingDTO = ReservationMapper.toBookingDTO(product,data);
+        myCompanyClientService.createBooking(bookingDTO);
         return new ErrorResponseReservationDTO().errorCode(
             ErrorResponseReservationDTO.ErrorCodeEnum.INTERNAL_SYSTEM_FAILURE);
     }
